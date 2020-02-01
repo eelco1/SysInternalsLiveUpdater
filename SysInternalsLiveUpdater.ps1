@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param(
   [String] $SysInternalsFolder = '.'
-  [String[]] $ExtensionsToSelect = '.exe', '.chm'
+  , [String[]] $ExtensionsToSelect = @('.exe', '.chm')
 )
 
 $baseURI =  'https://live.sysinternals.com'
@@ -51,5 +51,4 @@ if ($req.StatusCode -eq 200) {
         Write-Host ('Exception processing download: {0}' -f $Name)
       }
     }
-  }
 }
