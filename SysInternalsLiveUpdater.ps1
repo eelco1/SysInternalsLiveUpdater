@@ -40,8 +40,10 @@ if ($req.StatusCode -eq 200) {
   #$FileList | ? { $_.Timestamp -gt $_.LocalTimestamp -and $_.LocalSize -ne 0} | ft Name, Timestamp, LocalTimestamp, Size, LocalSize
   #$FileList | ? { $_.Size -ne $_.LocalSize -and $_.LocalSize -ne 0} | ft Name, Timestamp, LocalTimestamp, Size, LocalSize
   #$FileList | ? { $_.LocalSize -eq 0} | ft Name, Timestamp, Size
-  $FileList | 
-    where-object { $_.Timestamp -gt $_.LocalTimestamp} | 
+  $ChangedFileList = $FileList | 
+    where-object { $_.Timestamp -gt $_.LocalTimestamp} 
+  Write-Host -Object ('Files to be updated: {0}' -f $ChangedFileList.Count)
+  $ChangedFileList | 
     foreach-object {
       try {
         $name = $_.Name
