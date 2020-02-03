@@ -45,10 +45,11 @@ if ($req.StatusCode -eq 200) {
     foreach-object {
       try {
         $name = $_.Name
+        Write-Host -Object  ('Processing download: {0}' -f $Name)
         invoke-webrequest -URI ($baseURI + $_.Link) -OutFile (Join-Path -Path $SysInternalsFolder -ChildPath $Name)
       }
       catch{
-        Write-Host ('Exception processing download: {0}' -f $Name)
+        Write-Error -Message ('Exception processing download: {0}' -f $Name)
       }
     }
 }
