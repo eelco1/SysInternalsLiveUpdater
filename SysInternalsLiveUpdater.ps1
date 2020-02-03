@@ -5,7 +5,7 @@ Param(
 )
 
 $baseURI =  'https://live.sysinternals.com'
-$req = invoke-webrequest -URI $baseURI -UseBasicParsing
+$req = invoke-webrequest -URI $baseURI # -UseBasicParsing
 
 if ($req.StatusCode -eq 200) {
   $FilesOnPage = select-string '(\d+/\d+/\d+ \d+:\d+ \w+)\s+(\d+)\s+<A .*?HREF="(.+?)".*?>([\w\.]+)' -InputObject $req.content -AllMatches
@@ -15,8 +15,8 @@ if ($req.StatusCode -eq 200) {
   # $match = $FilesOnPage.matches[0]
     try {
       $Timestamp = [DateTime]::ParseExact($match.groups[1].value, 'M/d/yyyy h:mm tt', [CultureInfo]::InvariantCulture) 
-      $LocalFileName = join-path $SysInternalsFolder $match.groups[4].value
-      if ($ExtensionsToSelect -eq $Null -or $ExtensionsToSelect -contains [io.path]::GetExtension($LocalFileName)) {
+      $LocalFileName = Join-Path -Path $SysInternalsFolder -ChildPath $match.groups[4].value
+      if ($null -eq $ExtensionsToSelect -or $ExtensionsToSelect -contains [io.path]::GetExtension($LocalFileName)) {
         $FileObject = [PSCustomObject] @{
                         Timestamp = $Timestamp
                         Size = [int64]$match.groups[2].value
@@ -45,7 +45,7 @@ if ($req.StatusCode -eq 200) {
     foreach-object {
       try {
         $name = $_.Name
-        invoke-webrequest -URI ($baseURI + $_.Link) -OutFile (join-path $SysInternalsFolder $Name)
+        invoke-webrequest -URI ($baseURI + $_.Link) -OutFile (Join-Path -Path $SysInternalsFolder -ChildPath $Name)
       }
       catch{
         Write-Host ('Exception processing download: {0}' -f $Name)
