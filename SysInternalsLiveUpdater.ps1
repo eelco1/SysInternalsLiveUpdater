@@ -8,7 +8,7 @@ $baseURI =  'https://live.sysinternals.com'
 $req = invoke-webrequest -URI $baseURI # -UseBasicParsing
 
 if ($req.StatusCode -eq 200) {
-  $FilesOnPage = select-string '(\d+/\d+/\d+ \d+:\d+ \w+)\s+(\d+)\s+<A .*?HREF="(.+?)".*?>([\w\.]+)' -InputObject $req.content -AllMatches
+  $FilesOnPage = select-string -Pattern '(\d+/\d+/\d+ \d+:\d+ \w+)\s+(\d+)\s+<A .*?HREF="(.+?)".*?>([\w\.]+)' -InputObject $req.content -AllMatches
 
   $FileList = @()
   foreach ($match in $FilesOnPage.Matches) {
